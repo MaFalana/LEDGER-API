@@ -36,7 +36,7 @@ class MangaDex(MangaManager):
         else:
             print("Error:", response.status_code)
 
-        return[]
+        return []
 
 
     def getChapter(self, id): # Returns an array of chapter objects using a Manga id
