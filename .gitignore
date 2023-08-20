@@ -1,0 +1,8 @@
+# Ignore files related to API keys
+api/.env
+
+# Ignore Mac system files
+.DS_store
+
+# Ignore SWIFT CODE folder
+SWIFT CODE/
