@@ -13,13 +13,13 @@ class MangaDex(MangaManager):
     def __init__(self):
         super().__init__()
 
-    def getManga(self):
+    def getManga(self, limit, offset):
 
         url = "https://api.mangadex.org/manga"
 
         params = {
-            'limit': 10,
-            'offset': 0,
+            'limit': limit,
+            'offset': offset,
             'includedTagsMode': 'AND',
             'excludedTagsMode': 'OR',
             'contentRating[]': ['safe', 'suggestive', 'erotica'],
@@ -226,12 +226,12 @@ class MangaDex(MangaManager):
             return list
     
 
-    def searchManga(self, query):
+    def searchManga(self, query, limit, offset):
         url = "https://api.mangadex.org/manga"
 
         params = {
-            'limit': 10,
-            'offset': 0,
+            'limit': limit,
+            'offset': offset,
             'title': query,
             'includes[]': ['author', 'artist', 'cover_art']
         }

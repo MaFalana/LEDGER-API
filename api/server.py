@@ -43,19 +43,19 @@ def dex():
 
 
 @app.get('/MangaDex/Get') # Index Route
-async def getDex():
+async def getDex(limit: int = 10, offset: int = 0):
     data = {
         "Message": "Successfully retrieved a list of manga from MangaDex",
-        'Manga': MD.getManga()
+        'Manga': MD.getManga(limit, offset)
     }
 
     return data
 
 
 @app.get('/MangaDex/') # Search Route
-async def searchDex(query: str):
+async def searchDex(query: str, limit: int = 10, offset: int = 0):
     data = {
-        'Manga': MD.searchManga(query)
+        'Manga': MD.searchManga(query, limit, offset)
     }
 
     return data
