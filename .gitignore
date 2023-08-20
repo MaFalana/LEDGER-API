@@ -3,6 +3,7 @@ api/.env
 
 # Ignore Mac system files
 .DS_store
+._DS_store
 
 # Ignore SWIFT CODE folder
 SWIFT CODE/
