@@ -7,3 +7,4 @@ api/.env
 
 # Ignore SWIFT CODE folder
 SWIFT CODE/
+.vercel
