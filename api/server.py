@@ -61,6 +61,23 @@ async def searchDex(query: str, limit: int = 10, offset: int = 0):
     return data
 
 
+@app.get('/MangaDex/{id}/Chapter') # Gets chapters for manga
+async def searchChapters(id: str):
+    data = {
+        'Chapters': MD.getChapter(id)
+    }
+
+    return data
+
+@app.get('/MangaDex/{id}/Read') # Gets pages for manga chapter
+async def searchPages(id: str):
+    data = {
+        'Pages': MD.getPages(id)
+    }
+
+    return data
+
+
 
 @app.get('/MangaSee') # Index Route
 def see():

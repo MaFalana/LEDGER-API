@@ -43,37 +43,51 @@ class MangaDex(MangaManager):
 
         list = []
 
+        limit = 100
+        
+        offset = 0
+
         url = "https://api.mangadex.org/chapter"
 
-        params = {
-            'limit': 10, # Should be a variable
-            'offset': 0, # Should be a variable
-            'manga': id,
-            'translatedLanguage[]': 'en'
-        }
+        while True:
 
-        response = requests.get(url, params = params)
+            params = {
+                'limit': limit, # Should be a variable
+                'offset': offset, # Should be a variable
+                'manga': id,
+                'translatedLanguage[]': 'en'
+            }
 
-        if response.status_code == 200:
+            response = requests.get(url, params = params)
 
-            data = response.json()
+            if response.status_code == 200:
 
-            results = data['data']
+                data = response.json()
 
-            for source in results:
+                results = data['data']
 
-                chapter = { # Some chapters mau not have a volume
-                    'id': source['id'],
-                    'volume': source['attributes'].get('volume', None),  # Handle the volume attribute condition
-                    'chapter': source['attributes']['chapter'],
-                    'title': source['attributes']['title'],
-                    'pages': []
-                }
+                total = data['total'] # Total number of chapters
 
-                list.append(chapter)
+                for source in results:
 
-        else:
-            print("Error:", response.status_code)
+                    chapter = { # Some chapters may not have a volume
+                        'id': source['id'],
+                        'volume': source['attributes'].get('volume', None),  # Handle the volume attribute condition
+                        'chapter': source['attributes']['chapter'],
+                        'title': source['attributes']['title'],
+                        'pages': []
+                    }
+
+                    list.append(chapter)
+
+                offset += limit  # Move to the next page
+
+                if offset >= total:
+                    break  # Stop fetching if all chapters are retrieve
+
+            else:
+                print("Error:", response.status_code)
+                break
 
         return list
 
@@ -94,13 +108,13 @@ class MangaDex(MangaManager):
 
             data = response.json()
 
-            base = data['baseURL']
+            base = data['baseUrl']
             hash = data['chapter']['hash']
             pages = data['chapter']['data'] # An array of pages
 
             for page in pages:
 
-                link = f'{base}/data/{hash}{page}'
+                link = f'{base}/data/{hash}/{page}'
         
                 list.append(link)   
 
@@ -245,7 +259,41 @@ class MangaDex(MangaManager):
             print("Error:", response.status_code)
             return []
 
-    
+    def searchExtra(self, item, limit, offset): # search manga, either by tag, author, or artist
+
+        url = f"https://api.mangadex.org/manga"
+
+        if item['type'] == 'tag':
+            params = {
+                'limit': limit,
+                'offset': offset,
+                'includedTags[]': item['id'],
+                'includes[]': ['author', 'artist', 'cover_art']
+            }
+
+        elif item['type'] == 'author':
+            params = {
+                'limit': limit,
+                'offset': offset,
+                'author[]': item['id'],
+                'includes[]': ['author', 'artist', 'cover_art']
+            }
+
+        elif item['type'] == 'artist':
+            params = {
+                'limit': limit,
+                'offset': offset,
+                'artist[]': item['id'],
+                'includes[]': ['author', 'artist', 'cover_art']
+            }
+
+        response = requests.get(url, params = params)
+
+        if response.status_code == 200:
+            return self.parseResponse(response)
+        else:
+            print("Error:", response.status_code)
+            return []
 
 
 class MangaSee(MangaManager):
