@@ -131,10 +131,10 @@ class MangaDex(MangaManager):
         
         for source in relationships:
             if source['type'] == 'author':
-                author = self.getAuthor(source['id'])
+                author = self.getAuthor(source['id'], source['type'])
 
             elif source['type'] == 'artist':
-                artist = self.getAuthor(source['id'])
+                artist = self.getAuthor(source['id'], source['type'])
 
             elif source['type'] == 'cover_art':
                 cover = self.getCover(id, source['id'])
@@ -151,7 +151,7 @@ class MangaDex(MangaManager):
         return data
     
 
-    def getAuthor(self, id):
+    def getAuthor(self, id, type):
 
         url = f"https://api.mangadex.org/author/{id}"
 
@@ -163,7 +163,7 @@ class MangaDex(MangaManager):
 
             name = data['data']['attributes']['name']
 
-            return {'id': id, 'name': name}
+            return {'id': id, 'name': name, 'type': type}
 
         else:
             print("Error:", response.status_code)

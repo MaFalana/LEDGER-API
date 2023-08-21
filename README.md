@@ -48,4 +48,4 @@ Inspiration, code snippets, etc.
 
 - [Consumet](https://docs.consumet.org)
 
-- [My Docs](http://127.0.0.1:8000/docs)
+- [My Docs](https://ledger-hazel.vercel.app/docs)
