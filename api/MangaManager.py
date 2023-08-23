@@ -13,6 +13,27 @@ class MangaDex(MangaManager):
     def __init__(self):
         super().__init__()
 
+    def getManga2(self, id, limit, offset):
+
+        url = f"https://api.mangadex.org/manga/{id}"
+
+        params = {
+            #'limit': limit,
+            #'offset': offset,
+            'includes[]': ['author', 'artist', 'cover_art', 'tag']
+        }
+
+        response = requests.get(url, params = params)
+
+        if response.status_code == 200:
+                
+            return self.parseResponse(response)
+
+        else:
+            print("Error:", response.status_code)
+
+        return []
+
     def getManga(self, limit, offset):
 
         url = "https://api.mangadex.org/manga"
