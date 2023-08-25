@@ -18,8 +18,8 @@ class MangaDex(MangaManager):
         url = f"https://api.mangadex.org/manga/{id}"
 
         params = {
-            #'limit': limit,
-            #'offset': offset,
+            'limit': limit,
+            'offset': offset,
             'includes[]': ['author', 'artist', 'cover_art', 'tag']
         }
 
@@ -228,37 +228,62 @@ class MangaDex(MangaManager):
     
     def parseResponse(self, response):
             
-            list = []
+            rlist = []
             
             data = response.json()
     
             results = data['data']
+
+            if isinstance(results, list): # If the results is a list, then it is a search query
     
-            for manga in results:
+                for manga in results:
+        
+                    tags = manga['attributes']['tags']
+        
+                    relationships = self.getRelationships(manga['id'], manga['relationships'])
+        
+                    title1 = manga['attributes']['title'].get('en', None)
+                    title2 = manga['attributes']['title'].get('ja', None)
+                    
+                    Manga = {
+                        'source': 'MangaDex',
+                        'id': manga['id'],
+                        'title':  title1 or title2 or 'Untitled',
+                        'author': relationships['author'],
+                        'artist': relationships['artist'],
+                        'description': manga['attributes']['description'].get('en', None),
+                        'status': manga['attributes']['status'], # Should be capitalized
+                        'cover': relationships['cover'],
+                        'genre': self.getGenre(tags),
+                        'chapters': []#self.getChapter(manga['id'])
+                    }
+        
+                    rlist.append(Manga)
+
+            else:
+                tags = results['attributes']['tags']
+        
+                relationships = self.getRelationships(results['id'], results['relationships'])
     
-                tags = manga['attributes']['tags']
-    
-                relationships = self.getRelationships(manga['id'], manga['relationships'])
-    
-                title1 = manga['attributes']['title'].get('en', None)
-                title2 = manga['attributes']['title'].get('ja', None)
+                title1 = results['attributes']['title'].get('en', None)
+                title2 = results['attributes']['title'].get('ja', None)
                 
                 Manga = {
                     'source': 'MangaDex',
-                    'id': manga['id'],
+                    'id': results['id'],
                     'title':  title1 or title2 or 'Untitled',
                     'author': relationships['author'],
                     'artist': relationships['artist'],
-                    'description': manga['attributes']['description'].get('en', None),
-                    'status': manga['attributes']['status'], # Should be capitalized
+                    'description': results['attributes']['description'].get('en', None),
+                    'status': results['attributes']['status'], # Should be capitalized
                     'cover': relationships['cover'],
                     'genre': self.getGenre(tags),
-                    'chapters': self.getChapter(manga['id'])
+                    'chapters': []#self.getChapter(manga['id'])
                 }
     
-                list.append(Manga)
+                rlist.append(Manga)
     
-            return list
+            return rlist
     
 
     def searchManga(self, query, limit, offset):

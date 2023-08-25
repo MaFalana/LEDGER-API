@@ -33,19 +33,10 @@ def root():
     return data
 
 
-@app.get('/MangaDex') # Index Route
-def dex():
-
-    data = {
-        "Message": "Successfully connected to MangaDex route"
-    }
-
-    return data
-
 @app.get('/MangaDex/{id}') # get a manga by id (manga, author, artist, tag), return parameters should be a list
-async def find(limit: int = 10, offset: int = 0):
+async def find(id: str, limit: int = 10, offset: int = 0):
 
-    list = MD.getManga2(limit, offset)
+    list = MD.getManga2(id, limit, offset)
 
     data = {
         "Message": "Successfully retrieved a specific manga from MangaDex",
@@ -56,11 +47,13 @@ async def find(limit: int = 10, offset: int = 0):
     return data
 
 
-@app.get('/MangaDex/Get') # Index Route
+@app.get('/MangaDex/Get/') # Index Route
 async def getDex(limit: int = 10, offset: int = 0):
+    list = MD.getManga(limit, offset)
     data = {
         "Message": "Successfully retrieved a list of manga from MangaDex",
-        'data': MD.getManga(limit, offset)
+        'data': list,
+        'total': len(list)
     }
 
     return data
@@ -68,8 +61,10 @@ async def getDex(limit: int = 10, offset: int = 0):
 
 @app.get('/MangaDex/') # Search Route
 async def searchDex(query: str, limit: int = 10, offset: int = 0):
+    list = MD.searchManga(query, limit, offset)
     data = {
-        'data': MD.searchManga(query, limit, offset)
+        'data': list,
+        'total': len(list)
     }
 
     return data
