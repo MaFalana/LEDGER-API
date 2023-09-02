@@ -86,7 +86,7 @@ async def searchChapters(id: str):
         'Message': f"Search results for {query}",
         'Manga': [],
         'Chapter': list,
-        'Pages': [];
+        'Pages': [],
         'total': len(list)
         
     }
@@ -96,7 +96,7 @@ async def searchChapters(id: str):
 @app.get('/MangaDex/{id}/Read') # Gets pages for manga chapter
 async def searchPages(id: str):
     data = {
-        'data': MD.getPages(id)
+        'Pages': MD.getPages(id)
     }
 
     return data
