@@ -65,7 +65,7 @@ async def getDex(limit: int = 10, offset: int = 0):
 async def searchDex(query: str, limit: int = 10, offset: int = 0):
     list = MD.searchManga(query, limit, offset)
     data = {
-        'data': list,
+        'Manga': list,
         'total': len(list)
     }
 
