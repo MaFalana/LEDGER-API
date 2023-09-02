@@ -52,7 +52,7 @@ async def getDex(limit: int = 10, offset: int = 0):
     list = MD.getManga(limit, offset)
     data = {
         "Message": "Successfully retrieved a list of manga from MangaDex",
-        'data': list,
+        'Manga': list,
         'total': len(list)
     }
 
@@ -86,7 +86,19 @@ async def searchPages(id: str):
 
     return data
 
+@app.get('/MangaDex/{type}/{id}/') # Search for either manga, author, artist, or tag
+async def searchChapters(type: str, id: str, limit: int = 10, offset: int = 0):
+    list = MD.searchExtra(type, id, limit, offset)
 
+    data = {
+        "Message": "Successfully retrieved a specific manga from MangaDex",
+        'data': list,
+        'limit': limit,
+        'offset': offset,
+        'total': len(list)
+    }
+
+    return data
 
 @app.get('/MangaSee') # Index Route
 def see():
