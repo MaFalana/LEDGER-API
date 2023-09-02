@@ -77,8 +77,14 @@ async def searchDex(query: str, limit: int = 10, offset: int = 0):
 
 @app.get('/MangaDex/{id}/Chapter') # Gets chapters for manga
 async def searchChapters(id: str):
+    list = MD.getChapter(id)
     data = {
-        'data': MD.getChapter(id)
+        'Message': f"Search results for {query}",
+        'Manga': [],
+        'Chapter': list,
+        'Pages': [];
+        'total': len(list)
+        
     }
 
     return data
