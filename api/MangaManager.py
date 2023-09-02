@@ -304,32 +304,24 @@ class MangaDex(MangaManager):
         else:
             print("Error:", response.status_code)
             return []
+            
 
-    def searchExtra(self, item, limit, offset): # search manga, either by tag, author, or artist
+    def searchExtra(self, type, id, limit, offset): # search manga, either by tag, author, or artist
 
         url = f"https://api.mangadex.org/manga"
 
-        if item['type'] == 'tag':
+        if type == 'author' or type == 'artist':
             params = {
                 'limit': limit,
                 'offset': offset,
-                'includedTags[]': item['id'],
+                'authorOrArtist': id,
                 'includes[]': ['author', 'artist', 'cover_art']
             }
-
-        elif item['type'] == 'author':
+        else:
             params = {
                 'limit': limit,
                 'offset': offset,
-                'author[]': item['id'],
-                'includes[]': ['author', 'artist', 'cover_art']
-            }
-
-        elif item['type'] == 'artist':
-            params = {
-                'limit': limit,
-                'offset': offset,
-                'artist[]': item['id'],
+                'includedTags[]': id,
                 'includes[]': ['author', 'artist', 'cover_art']
             }
 
