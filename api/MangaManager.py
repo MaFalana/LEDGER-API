@@ -219,7 +219,8 @@ class MangaDex(MangaManager):
 
             genre = {
                 'id': tag['id'],
-                'name': tag['attributes']['name']['en']
+                'name': tag['attributes']['name']['en'],
+                'type': 'tag'
             }
 
             list.append(genre)
@@ -321,7 +322,7 @@ class MangaDex(MangaManager):
             params = {
                 'limit': limit,
                 'offset': offset,
-                'includedTags[]': id,
+                'includedTags[]': [id],
                 'includes[]': ['author', 'artist', 'cover_art']
             }
 
