@@ -94,11 +94,15 @@ async def searchChapters(type: str, id: str, limit: int = 10, offset: int = 0):
 
     data = {
         "Message": "Successfully retrieved a specific manga from MangaDex",
-        'data': list,
+        'Manga': list,
+        'Chapter': [],
+        'Pages': [],
         'limit': limit,
         'offset': offset,
         'total': len(list)
     }
+
+    
 
     return data
 
