@@ -53,6 +53,8 @@ async def getDex(limit: int = 10, offset: int = 0):
     data = {
         "Message": "Successfully retrieved a list of manga from MangaDex",
         'Manga': list,
+        'Chapter': [],
+        'Pages': [],
         'total': len(list)
     }
 
