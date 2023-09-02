@@ -33,7 +33,7 @@ def root():
     return data
 
 
-@app.get('/MangaDex/{id}') # get a manga by id (manga, author, artist, tag), return parameters should be a list
+@app.get('/MangaDex/{id}/') # get a manga by id (manga, author, artist, tag), return parameters should be a list
 async def find(id: str, limit: int = 10, offset: int = 0):
 
     list = MD.getManga2(id, limit, offset)
@@ -43,6 +43,8 @@ async def find(id: str, limit: int = 10, offset: int = 0):
         'Manga': list,
         'Chapter': [],
         'Pages': [],
+        'limit': limit,
+        'offset': offset,
         'total': len(list)
     }
 
