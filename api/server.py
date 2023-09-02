@@ -67,6 +67,8 @@ async def searchDex(query: str, limit: int = 10, offset: int = 0):
     data = {
         'Message': f"Search results for {query}",
         'Manga': list,
+        'Chapter': [],
+        'Pages': [],
         'total': len(list)
     }
 
