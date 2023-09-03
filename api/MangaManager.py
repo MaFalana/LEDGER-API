@@ -256,7 +256,7 @@ class MangaDex(MangaManager):
                         'status': manga['attributes']['status'], # Should be capitalized
                         'cover': relationships['cover'],
                         'genre': self.getGenre(tags),
-                        'chapters': []#self.getChapter(manga['id'])
+                        'chapters': self.getChapter(manga['id'])
                     }
         
                     rlist.append(Manga)
