@@ -96,8 +96,8 @@ class MangaDex(MangaManager):
                         'volume': source['attributes'].get('volume', None),  # Handle the volume attribute condition
                         'chapter': source['attributes']['chapter'],
                         'title': source['attributes']['title'],
-                        'pages': [],
-                        'date': '09/02/2023',
+                        'pages': []
+                        #'date': '09/02/2023',
                     }
 
                     list.append(chapter)
