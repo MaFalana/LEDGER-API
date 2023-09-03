@@ -51,7 +51,7 @@ async def find(id: str, limit: int = 10, offset: int = 0):
     return data
 
 
-@app.get('/MangaDex/Get/') # Index Route
+@app.get('/MangaDex/Get') # Index Route
 async def getDex(limit: int = 10, offset: int = 0):
     list = MD.getManga(limit, offset)
     data = {
@@ -59,6 +59,8 @@ async def getDex(limit: int = 10, offset: int = 0):
         'Manga': list,
         'Chapter': [],
         'Pages': [],
+        'limit': limit,
+        'offset': offset,
         'total': len(list)
     }
 
