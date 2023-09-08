@@ -417,6 +417,8 @@ class MangaKomi(MangaManager):
 
     def findManga(self, id):
 
+        print(id)
+
         list = []
 
         Manga = self.parseManga(id)
