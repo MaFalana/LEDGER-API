@@ -189,8 +189,8 @@ def findKomi(id: str, limit: int = 10, offset: int = 0):
 
 
 
-@app.get('/MangaKomi/Chapter/{id}/')
-def findChapter(id: str):
+@app.get('/MangaKomi/{id}/Chapter/{chapter}')
+def findChapter(id: str, chapter: str):
 
     data = {
         "Message": "MangaKomi Chapter endpoints work",

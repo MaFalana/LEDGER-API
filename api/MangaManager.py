@@ -1,5 +1,5 @@
 #import os, 
-import requests
+import requests, re
 #from dotenv import load_dotenv
 #load_dotenv()
 
@@ -395,11 +395,12 @@ class MangaKomi(MangaManager):
 
             doc = BeautifulSoup(response.content, 'html.parser') # Might need to change this to response.text, html.parser
 
-            source = doc.select("div.manga  div.item-thumb a[title]") # list of manga
+            source = doc.select("div.manga  div.item-thumb a[title]") # list of manga    
 
-            #self.parseManga(doc)
+        else:
+            print("Error:", response.status_code)
 
-            for data in source:
+        for data in source:
 
                 id = data.get('href', None)
 
@@ -408,9 +409,6 @@ class MangaKomi(MangaManager):
                 if Manga:
 
                     list.append(Manga)
-
-        else:
-            print("Error:", response.status_code)
 
         return list
     
@@ -440,8 +438,8 @@ class MangaKomi(MangaManager):
                 tags = doc.select("div.genres-content") #vs doc.find_all("div", class_= "genres-content")
                 author = doc.select("div.author-content")
                 artist = doc.select("div.artist-content")
-
                 relationships = self.getRelationships(author, artist, tags)
+                chapters = doc.select("li.wp-manga-chapter")
 
                 Manga = {
                     'source': 'MangaKomi',
@@ -453,7 +451,7 @@ class MangaKomi(MangaManager):
                     'status': doc.select("div.summary_content div.post-status div.summary-content")[0].text.strip(), # Should be capitalized
                     'cover': doc.select("div.summary_image img.img-responsive[src]")[0].get("data-src"),
                     'genre': relationships['genre'],
-                    'chapters': []
+                    'chapters': self.parseChapter(chapters)
                 }
 
                 return Manga
@@ -466,6 +464,46 @@ class MangaKomi(MangaManager):
             print("Error:", response.status_code)
             return None
         
+
+    def parseChapter(self, results): # Parses the info of a chapter
+
+        list = []
+        number = None
+        title = None
+
+        for source in results:
+
+            number, title = self.extractChapterInfo(source.text.strip("Chapter "))
+
+            chapter = { # Some chapters may not have a volume
+                'id': source.find("a")["href"],
+                'volume': None,  # Handle the volume attribute condition
+                'chapter': number,
+                'title': title,
+                'pages': [],
+                'date': source.find("i").text
+            }
+    
+            list.append(chapter)
+
+        return list
+
+
+    def extractChapterInfo(self, source): # Extracts the chapter number and title from the source
+        # stuff to parse title
+        pattern = r'Chapter (\d+(?:\.\d+)?) - (.+)|Chapter (\d+(?:\.\d+)?)'
+        match = re.search(pattern, source)
+        if match:
+            if match.group(1):
+                number = match.group(1) # Extract the chapter number and title from the match
+                title = match.group(2).strip()  # Strip leading and trailing whitespace
+            else:
+                number = match.group(3)
+                title = None
+            return number, title
+        else:
+            return None, None
+
 
     def getAuthor(self, type, source): # Gets the author or artist of a manga
 
