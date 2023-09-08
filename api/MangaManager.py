@@ -493,7 +493,7 @@ class MangaKomi(MangaManager):
             for name in names:
 
                 genre = {
-                    'id': f"https://mangakomi.io/manga-genre/{name}/",
+                    'id': f'https://mangakomi.io/manga-genre/{name.lower().replace(" ", "-")}/',
                     'name': name
                 }
 
