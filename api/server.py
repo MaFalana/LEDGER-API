@@ -173,7 +173,7 @@ def getKomi(limit: int = 10, offset: int = 0):
 @app.get('/MangaKomi/Manga/{id}/') # get a manga by id (manga, author, artist, tag), return parameters should be a list
 def findKomi(id: str, limit: int = 10, offset: int = 0):
     
-        list = [MK.parseManga(id)]
+        list = [MK.findManga(id)]
     
         data = {
             "Message": "Successfully retrieved a specific manga from MangaKomi",

@@ -417,25 +417,26 @@ class MangaKomi(MangaManager):
 
     def findManga(self, id):
 
-        print(id)
-
         list = []
 
-        Manga = self.parseManga(id)
+        url = f"https://mangakomi.io/manga/{id}/"
+
+        Manga = self.parseManga(url)
 
         list.append(Manga)
 
         return list
     
     
-    def parseManga(self, id): # Parses the info of a manga from html
+    def parseManga(self, url): # Parses the info of a manga from html
 
-        response = requests.get(id)
+        response = requests.get(url)
         doc = BeautifulSoup(response.content, 'html.parser')
 
         if response.status_code == 200:
         
             try:
+                title = doc.find("h1").text.strip()
                 tags = doc.select("div.genres-content") #vs doc.find_all("div", class_= "genres-content")
                 author = doc.select("div.author-content")
                 artist = doc.select("div.artist-content")
@@ -444,8 +445,8 @@ class MangaKomi(MangaManager):
 
                 Manga = {
                     'source': 'MangaKomi',
-                    'id': id, # Should be the id of the manga, will probably be a url
-                    'title': doc.find("h1").text.strip(),
+                    'id': title.lower().replace(" ", "-"), # Should be the id of the manga, will probably be a url
+                    'title': title,
                     'author': relationships['author'],
                     'artist': relationships['artist'],
                     'description': doc.select("div.summary__content p")[1].text.strip(), # May need to change this
