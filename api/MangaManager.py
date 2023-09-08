@@ -3,6 +3,8 @@ import requests
 #from dotenv import load_dotenv
 #load_dotenv()
 
+from bs4 import BeautifulSoup
+
 class MangaManager(object):
     def __init__(self):
         pass
@@ -375,3 +377,133 @@ class MangaSee(MangaManager):
             print("Error:", response.status_code)
 
         return list
+
+
+class MangaKomi(MangaManager):
+    def __init__(self):
+        super().__init__()
+
+    def getManga(self):
+
+        list = []
+
+        url = f"https://mangakomi.io/manga/?m_orderby=views"
+
+        response = requests.get(url)
+
+        if response.status_code == 200:
+
+            doc = BeautifulSoup(response.content, 'html.parser') # Might need to change this to response.text, html.parser
+
+            source = doc.select("div.manga  div.item-thumb a[title]") # list of manga
+
+            #self.parseManga(doc)
+
+            for data in source:
+
+                id = data.get('href', None)
+
+                Manga = self.parseManga(id)
+
+                if Manga:
+
+                    list.append(Manga)
+
+        else:
+            print("Error:", response.status_code)
+
+        return list
+    
+
+    def findManga(self, id):
+
+        list = []
+
+        Manga = self.parseManga(id)
+
+        list.append(Manga)
+
+        return list
+    
+    
+    def parseManga(self, id): # Parses the info of a manga from html
+
+        response = requests.get(id)
+        doc = BeautifulSoup(response.content, 'html.parser')
+
+        if response.status_code == 200:
+        
+            try:
+                tags = doc.select("div.genres-content") #vs doc.find_all("div", class_= "genres-content")
+                author = doc.select("div.author-content")
+                artist = doc.select("div.artist-content")
+
+                relationships = self.getRelationships(author, artist, tags)
+
+                Manga = {
+                    'source': 'MangaKomi',
+                    'id': id, # Should be the id of the manga, will probably be a url
+                    'title': doc.find("h1").text.strip(),
+                    'author': relationships['author'],
+                    'artist': relationships['artist'],
+                    'description': doc.select("div.summary__content p")[1].text.strip(), # May need to change this
+                    'status': doc.select("div.summary_content div.post-status div.summary-content")[0].text.strip(), # Should be capitalized
+                    'cover': doc.select("div.summary_image img.img-responsive[src]")[0].get("data-src"),
+                    'genre': relationships['genre'],
+                    'chapters': []
+                }
+
+                return Manga
+
+            except Exception as error:
+                print(f"Error parsing manga html: {str(error)}")
+                return None
+            
+        else:
+            print("Error:", response.status_code)
+            return None
+        
+
+    def getAuthor(self, type, source): # Gets the author or artist of a manga
+
+        if source:
+
+            data = {
+                'id': source[0].select('a')[0]["href"],
+                'name': source[0].text.strip(),
+                'type': type
+            }
+
+        else:
+
+            data = None
+
+        return data
+            
+    def getGenre(self, tags):
+        list = []
+
+        for tag in tags:
+
+            names = [genre.strip() for genre in tag.text.split(',')]
+
+            for name in names:
+
+                genre = {
+                    'id': f"https://mangakomi.io/manga-genre/{name}/",
+                    'name': name
+                }
+
+                list.append(genre)
+
+        return list
+    
+    def getRelationships(self, author, artist, tags): #gets author, artist, and genres
+
+        data = {
+            'author': self.getAuthor('author', author),
+            'artist': self.getAuthor('artist', artist),
+            'genre': self.getGenre(tags)
+        }
+
+        return data

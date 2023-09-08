@@ -12,6 +12,8 @@ the `LEDGER° API` is designed to be an API meant to significantly simplify the 
 
 Throughout the development of the `LEDGER° API`, several valuable lessons were learned:
 
+- **Web Scraping**:
+
 ## Compiling
 
 

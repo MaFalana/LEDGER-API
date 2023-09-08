@@ -6,10 +6,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import uvicorn
 
-from api.MangaManager import MangaDex, MangaSee
+from api.MangaManager import MangaDex, MangaSee, MangaKomi
 
 MD = MangaDex()
 MS = MangaSee()
+MK = MangaKomi()
 
 app = FastAPI(title="LEDGER° API") # Initialize the Flask application
 # and enable CORS
@@ -137,6 +138,66 @@ def getSee():
     data = {
         "Message": "Successfully retrieved a list of manga from MangaSee",
         'Manga': MS.getManga()
+    }
+
+    return data
+
+
+
+@app.get('/MangaKomi') # Index Route
+def komi():
+
+    data = {
+        "Message": "Successfully connected to MangaKomi route"
+    }
+
+    return data
+
+
+@app.get('/MangaKomi/Get') # Index Route
+def getKomi(limit: int = 10, offset: int = 0):
+    list = MK.getManga()
+
+    data = {
+        "Message": "Successfully retrieved a list of manga from MangaKomi",
+        'Manga': list,
+        'Chapter': [],
+        'Pages': [],
+        'limit': limit,
+        'offset': offset,
+        'total': len(list)
+    }
+
+    return data
+
+@app.get('/MangaKomi/Manga/{id}/') # get a manga by id (manga, author, artist, tag), return parameters should be a list
+def findKomi(id: str, limit: int = 10, offset: int = 0):
+    
+        list = [MK.parseManga(id)]
+    
+        data = {
+            "Message": "Successfully retrieved a specific manga from MangaKomi",
+            'Manga': list,
+            'Chapter': [],
+            'Pages': [],
+            'limit': limit,
+            'offset': offset,
+            'total': len(list)
+        }
+    
+        return data
+
+
+
+@app.get('/MangaKomi/Chapter/{id}/')
+def findChapter(id: str):
+
+    data = {
+        "Message": "MangaKomi Chapter endpoints work",
+        'Manga': [],
+        'Chapter': [],
+        'Pages': [],
+        'total': 0
     }
 
     return data
