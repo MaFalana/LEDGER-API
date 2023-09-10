@@ -14,6 +14,8 @@ Throughout the development of the `LEDGER° API`, several valuable lessons were 
 
 - **Web Scraping**:
 
+- **Vercel Edge Functions**:
+
 ## Compiling
 
 

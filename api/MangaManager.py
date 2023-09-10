@@ -5,6 +5,10 @@ import requests, re
 
 from bs4 import BeautifulSoup
 
+from db import DatabaseManager
+
+db = DatabaseManager("LEDGER")
+
 class MangaManager(object):
     def __init__(self):
         pass
@@ -54,7 +58,12 @@ class MangaDex(MangaManager):
 
         if response.status_code == 200:
                 
-            return self.parseResponse(response)
+            list = self.parseResponse(response)
+        
+            for item in list:
+                db.addManga(item)
+
+            return list
 
         else:
             print("Error:", response.status_code)
@@ -387,7 +396,9 @@ class MangaKomi(MangaManager):
 
         list = []
 
-        url = f"https://mangakomi.io/manga/?m_orderby=views"
+        url = f"https://mangakomi.io/manga/?m_orderby=rating"
+
+        #url = f"https://mangakomi.io"
 
         response = requests.get(url)
 
@@ -410,6 +421,8 @@ class MangaKomi(MangaManager):
 
                     list.append(Manga)
 
+        for item in list:
+            db.addManga(item)
         return list
     
 
@@ -422,6 +435,9 @@ class MangaKomi(MangaManager):
         Manga = self.parseManga(url)
 
         list.append(Manga)
+
+        for item in list:
+            db.addManga(item)
 
         return list
     
@@ -486,6 +502,8 @@ class MangaKomi(MangaManager):
     
             list.append(chapter)
 
+        list.reverse()
+
         return list
 
 
@@ -532,7 +550,8 @@ class MangaKomi(MangaManager):
 
                 genre = {
                     'id': f'https://mangakomi.io/manga-genre/{name.lower().replace(" ", "-")}/',
-                    'name': name
+                    'name': name,
+                    'type': 'tag'
                 }
 
                 list.append(genre)
