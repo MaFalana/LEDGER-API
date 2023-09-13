@@ -1,5 +1,5 @@
 '''
-Name: db.py
+Name: DB.py
 Description: Database connection manager for
 '''
 
