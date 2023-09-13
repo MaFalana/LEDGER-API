@@ -9,16 +9,15 @@ import os
 
 load_dotenv()
 
-user = os.getenv("MONGO_USER")
 
-pwd = os.getenv("MONGO_PASS")
-
-host = os.getenv("MONGO_HOST")
-
-connection = f"mongodb+srv://{user}:{pwd}@{host}/"
 
 class DatabaseManager:
     def __init__(self, db_name):
+        user = os.getenv("MONGO_USER")
+        pwd = os.getenv("MONGO_PASS")
+        host = os.getenv("MONGO_HOST")
+        connection = f"mongodb+srv://{user}:{pwd}@{host}/"
+        
         self.client = MongoClient(connection)
         self.db = self.client[db_name]
         print(f'Connected to {db_name} database') 

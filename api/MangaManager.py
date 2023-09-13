@@ -5,7 +5,7 @@ import requests, re
 
 from bs4 import BeautifulSoup
 
-from DB import DatabaseManager
+from DB import *
 
 db = DatabaseManager("LEDGER")
 
