@@ -5,9 +5,9 @@ import requests, re
 
 from bs4 import BeautifulSoup
 
-from DB import *
+#from DB import *
 
-db = DatabaseManager("LEDGER")
+#db = DatabaseManager("LEDGER")
 
 class MangaManager(object):
     def __init__(self):
@@ -60,8 +60,8 @@ class MangaDex(MangaManager):
                 
             list = self.parseResponse(response)
         
-            for item in list:
-                db.addManga(item)
+            #for item in list:
+                #db.addManga(item)
 
             return list
 
@@ -107,8 +107,8 @@ class MangaDex(MangaManager):
                         'volume': source['attributes'].get('volume', None),  # Handle the volume attribute condition
                         'chapter': source['attributes']['chapter'],
                         'title': source['attributes']['title'],
-                        'pages': []
-                        #'date': '09/02/2023',
+                        'pages': [],
+                        'date': source['attributes']['publishAt']
                     }
 
                     list.append(chapter)
@@ -396,7 +396,7 @@ class MangaKomi(MangaManager):
 
         list = []
 
-        url = f"https://mangakomi.io/manga/?m_orderby=rating"
+        url = f"https://mangakomi.io/manga/"
 
         #url = f"https://mangakomi.io"
 
@@ -421,8 +421,8 @@ class MangaKomi(MangaManager):
 
                     list.append(Manga)
 
-        for item in list:
-            db.addManga(item)
+       # for item in list:
+            #db.addManga(item)
         return list
     
 
