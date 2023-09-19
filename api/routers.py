@@ -1,3 +1,5 @@
+import sys # for local
+sys.path.append('.') #for local
 from fastapi import APIRouter # Import the APIRouter class from fastapi
 from api.MangaManager import MangaDex, MangaKomi # Import classes from MangaManager.py
 MD = MangaDex()
