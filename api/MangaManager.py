@@ -14,7 +14,6 @@ class MangaManager(object):
         pass
 
 
-
 class MangaDex(MangaManager):
     def __init__(self):
         super().__init__()
@@ -345,47 +344,6 @@ class MangaDex(MangaManager):
         else:
             print("Error:", response.status_code)
             return []
-
-
-class MangaSee(MangaManager):
-    def __init__(self):
-        super().__init__()
-
-    def getManga(self):
-
-        list = []
-
-        query = 'One'
-
-        url = f"https://api.consumet.org/manga/mangasee123/{query}"
-
-        response = requests.get(url)
-
-        if response.status_code == 200:
-
-            source = response.json()['results']
-
-            for data in source:
-
-                Manga = {
-                    'source': 'MangaSee',
-                    'id': data['id'],
-                    'title': data['title'],
-                    'author': None,
-                    'artist': None,
-                    'description': None,
-                    'status':None, # Should be capitalized
-                    'cover': data['image'],
-                    'genre': data['genres'],
-                    'chapters': data['chapters']
-                }
-
-                list.append(Manga)
-
-        else:
-            print("Error:", response.status_code)
-
-        return list
 
 
 class MangaKomi(MangaManager):
