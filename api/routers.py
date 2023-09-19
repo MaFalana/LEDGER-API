@@ -45,8 +45,8 @@ async def find(id: str, limit: int = 10, offset: int = 0):
 
     return data
 
-@router.get('/') # Search Route
-async def searchDex(query: str, limit: int = 10, offset: int = 0):
+@router.get('/Search') # Search Route
+async def search_manga_from_MangaDex(query: str, limit: int = 10, offset: int = 0):
     list = MD.searchManga(query, limit, offset)
     data = {
         'Message': f"Search results for {query}",
@@ -149,3 +149,9 @@ def find_chapter_from_MangaKomi(id: str, chapter: str):
     }
 
     return data
+
+
+
+# GOOGLE BOOKS ROUTER
+
+router3 = APIRouter(prefix="/GoogleBooks", tags=["Google Books"]) # Initialize the router

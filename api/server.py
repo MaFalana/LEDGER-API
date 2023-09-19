@@ -11,7 +11,7 @@ from api.routers import router, router2 # Import routers
 
 app = FastAPI(title="LEDGER° API") # Initialize the Flask application
 app.include_router(router) # Include the routers in the app
-app.include_router(router2) # Include the routers in the app
+app.include_router(router2) 
 # and enable CORS
 app.add_middleware(
     CORSMiddleware,
