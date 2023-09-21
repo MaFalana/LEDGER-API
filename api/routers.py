@@ -14,7 +14,7 @@ router = APIRouter(
 
 
 @router.get('/') # Index Route
-async def getDex(limit: int = 10, offset: int = 0):
+async def get_a_list_of_manga_from_MangaDex(limit: int = 10, offset: int = 0):
     list = MD.getManga(limit, offset)
     data = {
         "Message": "Successfully retrieved a list of manga from MangaDex",
@@ -29,7 +29,7 @@ async def getDex(limit: int = 10, offset: int = 0):
     return data
 
 @router.get('/{id}') # get a manga by id (manga, author, artist, tag), return parameters should be a list
-async def find(id: str, limit: int = 10, offset: int = 0):
+async def find_a_manga_from_MangaDex(id: str, limit: int = 10, offset: int = 0):
 
     list = MD.getManga2(id, limit, offset)
 
@@ -59,7 +59,7 @@ async def search_manga_from_MangaDex(query: str, limit: int = 10, offset: int = 
     return data
 
 @router.get('/{id}/Chapter') # Gets chapters for manga
-async def searchChapters(id: str):
+async def get_chapters_from_MangaDex(id: str):
     list = MD.getChapter(id)
     data = {
         'Message': f"Search results for {id}",
@@ -73,9 +73,14 @@ async def searchChapters(id: str):
     return data
 
 @router.get('/{id}/Read') # Gets pages for manga chapter
-async def searchPages(id: str):
+async def get_pages_from_MangaDex(id: str):
+    pages = MD.getPages(id)
     data = {
-        'Pages': MD.getPages(id)
+        'Message': f"Found pages for Chapter: {id}",
+        'Manga': [],
+        'Chapter': [],
+        'Pages': pages,
+        'total': len(pages)
     }
 
     return data
@@ -106,7 +111,7 @@ async def searchChapters(type: str, id: str, limit: int = 10, offset: int = 0):
 router2 = APIRouter(prefix="/MangaKomi", tags=["MangaKomi"]) # Initialize the router
 
 @router2.get('/') # Index Route
-def get_manga_from_MangaKomi(limit: int = 10, offset: int = 0):
+def get_a_list_of_manga_from_MangaKomi(limit: int = 10, offset: int = 0):
     list = MK.getManga()
     data = {
         "Message": "Successfully retrieved a list of manga from MangaKomi",
